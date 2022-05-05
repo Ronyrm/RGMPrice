@@ -1,0 +1,72 @@
+{% macro modalcadusuario() %}
+
+<div class="modal fade" id="modal-cadastro-usuario" tabindex="-1" aria-labelledby="modal-cadastro-usuario" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary">
+        <h5 class="modal-title" id="exampleModalLabel">Cadastro Usuário</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+          <div class="modal-body bg-light">
+              <form class="row g-3 needs-validation" method="post" action="#" novalidate>
+              <div class="col-md-6">
+                  <label for="razaosocial" class="form-label">Primeiro Nome</label>
+                  <input type="text" class="form-control" id="razaosocial"  name=razaosocial"  value="" required>
+                  <div class="invalid-feedback">
+                      Forneça o seu Nome
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <label for="nomefantasia" class="form-label">SobreNome</label>
+                  <input type="text" class="form-control" id="nomefantasia" name="nomefantasia">
+              </div>
+              <div class="col-md-6">
+                  <label for="username" class="form-label">Username</label>
+                  <div class="input-group has-validation">
+                      <input type="text" class="form-control" id="username" name="username" aria-describedby="inputGroupPrepend" required>
+                      <span class="input-group-text" id="inputGroupPrepend d-none"></span>
+                      <div class="invalid-feedback">
+                          Forneça o username de Login
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <label for="cnpjcpf" class="form-label">CPF</label>
+                  <input type="text" class="form-control" id="cnpjcpf" name="cnpjcpf" required>
+                  <div class="invalid-feedback">
+                      Forneça o CPF
+                  </div>
+              </div>
+              <div class="col-md-12">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                  <div class="invalid-feedback">
+                      Forneça o email
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <label for="senha" class="form-label">Senha</label>
+                  <input type="password" class="form-control" id="senha" name="senha" required>
+                  <div class="invalid-feedback">
+                      Forneça a Senha.
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <label for="senhaconfirma" class="form-label">Confirmação de Senha</label>
+                  <input type="password" class="form-control" id="senhaconfirma" name="senhaconfirma" required>
+                  <div class="invalid-feedback">
+                      Forneça a Senha.
+                  </div>
+              </div>
+              </form>
+          </div>
+          <div class="modal-footer bg-primary ">
+              <button class="btn btn-success" onclick="butConfirmarCadUsuario();" type="button">Confirmar</button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+          </div>
+
+
+    </div>
+  </div>
+</div>
+{% endmacro%}

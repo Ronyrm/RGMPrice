@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+{% block token %} {{ token }} {% endblock %}
+{% block login %} {{ login }} {% endblock %}
+{% block mensagem %} {{ mensagem }} {% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-middle">
+
+    {% set escondeSpan = 'd-none' %}
+    {% if login == False %}
+    {% set escondeSpan = 'd-block' %}
+    {% endif %}
+    <div class="col-10 col-lg-6 bg-light p-3 my-auto">
+        {{login}}
+        <form method="post" action="{{url_for('rotaauth.autentifica_form')}}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="usernameemail" class="label-control">Username/Email</label>
+                    <input type="text" id="usernameemail" name="username" class="form-control form-control-lg">
+                </div>
+                <div class="form-group">
+                    <label for="password" class="label-control">Senha</label>
+                    <input type="password" id="password" name="password" class="form-control form-control-lg">
+                </div>
+            </div>
+            <span class="mt-2 alert alert-danger {{escondeSpan}}">{{mensagem}}</span>
+            <div class="d-flex justify-content-center mt-2">
+                <button  type="submit" class="w-50 btn btn-success"> Conectar </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

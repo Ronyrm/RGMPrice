@@ -1,0 +1,21 @@
+{% extends "layouts/base.html" %}
+
+{% block token %} {{ token }} {% endblock %}
+
+{% block content %}
+<div align="center">
+  <h1 class="title">
+      Teste - {{token}}
+  </h1>
+</div>
+{% import 'layouts/pessoas/usuarios/mdcadastrousuario.html' as modal_cadastrousuario %}
+{{ modal_cadastrousuario.modalcadusuario() }}
+
+{% endblock %}
+
+
+
+
+
+
+
