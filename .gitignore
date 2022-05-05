@@ -5,7 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+conexao/configDB.py
 # Distribution / packaging
 .Python
 build/

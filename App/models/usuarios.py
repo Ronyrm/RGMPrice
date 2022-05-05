@@ -1,7 +1,8 @@
 from App import db
 from datetime import datetime
 from App.models.pessoas import SchemaPessoas
-from marshmallow_sqlalchemy import ModelSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+
 from marshmallow import fields
 
 class Usuarios(db.Model):
@@ -14,7 +15,7 @@ class Usuarios(db.Model):
     idpessoa = db.Column(db.Integer, db.ForeignKey('pessoas.id',back_populates="usuario"))
     pessoa = db.relationship("Pessoas")
 
-class SchemaUsuarios(ModelSchema):
+class SchemaUsuarios(SQLAlchemyAutoSchema):
     class Meta:
         model: Usuarios
     pessoa = fields.Nested(SchemaPessoas)

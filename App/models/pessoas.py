@@ -1,5 +1,5 @@
 from App import db
-from marshmallow_sqlalchemy import ModelSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema 
 
 class Pessoas(db.Model):
     __tablename__ = 'pessoas'
@@ -11,6 +11,6 @@ class Pessoas(db.Model):
     emailprincipal = db.Column(db.String(50), nullable=False, unique=True)
     usuario = db.relationship("Usuarios", back_populates="pessoa")
 
-class SchemaPessoas(ModelSchema):
+class SchemaPessoas(SQLAlchemyAutoSchema):
     class Meta:
         model: Pessoas
