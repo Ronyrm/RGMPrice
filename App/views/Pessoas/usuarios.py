@@ -46,15 +46,16 @@ def GravaNovoUsuarioForm():
                             'sucesso': False})
         IdPessoa = pessoas.SalvarNovaPessoa(data)
 
-        if IdPessoa == -1:
-            return jsonify({'mensagem':f' Houve um Erro ao tentar gravar no banco de dados. Tente novamente!',
+        if IdPessoa[0] == -1:
+            print(IdPessoa[1])
+            return jsonify({'mensagem':f' Houve um Erro:{IdPessoa[1]} ao tentar gravar no banco de dados. Tente novamente!',
                             'sucesso': False})
-        usuario.idpessoa = IdPessoa
+        usuario.idpessoa = IdPessoa[0]
         try:
             db.session.add(usuario)
-            db.commit()
+            db.session.commit()
             return jsonify({'mensagem':f'Usuário {data["username"]} adicionado com sucesso',
                         'sucesso':True})
-        except:
-            return jsonify({'mensagem': f' Houve um Erro ao tentar gravar no banco de dados. Tente novamente!',
+        except Exception as e:
+            return jsonify({'mensagem': f' Houve um Erro:{str(e)} ao tentar gravar no banco de dados. Tente novamente!',
                             'sucesso': False})

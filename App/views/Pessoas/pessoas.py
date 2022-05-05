@@ -20,8 +20,8 @@ def SalvarNovaPessoa(data):
         pessoa.tipopessoa = 'F' if len(data['cnpjcpf']) == 11 else 'J'
         pessoa.nomefantasia = data['nomefantasia']
         db.session.add(pessoa)
-        db.commit()
-        return pessoa.id
-    except:
-        return -1
+        db.session.commit()
+        return [pessoa.id,'']
+    except Exception as e:
+        return [-1,str(e)]
 
