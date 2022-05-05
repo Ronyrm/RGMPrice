@@ -22,21 +22,22 @@ def capturaUsuarioPorUserNameEmail(nome):
 
 # Gravar novo Usuário
 def GravaNovoUsuarioForm():
+    from werkzeug.security import generate_password_hash
     if request.method == 'POST':
         data = request.form
         usuario = Usuarios()
         usuario.username = data['username']
-        usuario.senha = data['senha']
+        usuario.senha = generate_password_hash(data['senha'])
 
         # validando username
-        if capturaUsuarioPorUserName(usuario.username):
-            return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o username: {usuario.username} no sistema',
+        if capturaUsuarioPorUserNameEmail(usuario.username):
+            return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o username/email: {usuario.username} no sistema',
                             'sucesso': False})
         # validando email
-        pessoa = pessoas.getPessoaPorEmail(data['email'])
-        if pessoa:
-            return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o email: {data["email"]} no sistema',
-                            'sucesso': False})
+        #pessoa = pessoas.getPessoaPorEmail(data['email'])
+        #if pessoa:
+        #    return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o email: {data["email"]} no sistema',
+        #                    'sucesso': False})
 
         # validando username
         pessoa = pessoas.getPessoaPorCNPJCPF(data['cnpjcpf'])
