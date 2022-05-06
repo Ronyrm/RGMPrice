@@ -13,7 +13,7 @@ def autentifica_form():
     if request.method == 'POST':
         username, senha = request.form['username'],request.form['password']
 
-        usuario = usuarios.capturaUsuarioPorUserNameEmail(username)
+        usuario = usuarios.capturaUsuarioPorUserNameEmail(username,username)
         if not usuario:
             return render_template('layouts/login.html',
                                    login=False,

@@ -8,6 +8,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
           <div class="modal-body bg-light">
+              <div class="alert alert-danger d-none my-2 alert-dismissible fade show" 
+              role="alert" id="alertcadusuario"></div>
               <form class="row g-3 needs-validation" method="post" action="#" id="formcadusuario" novalidate>
               <div class="col-md-6">
                   <label for="razaosocial" class="form-label">Primeiro Nome</label>
@@ -62,7 +64,7 @@
           </div>
           <div class="modal-footer bg-primary ">
               <button class="btn btn-success" onclick="butConfirmarCadUsuario();" type="button">Confirmar</button>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fechar</button>
+              <button type="button" class="btn btn-danger" id="btnfecharcadusuario" data-bs-dismiss="modal">Fechar</button>
           </div>
 
 

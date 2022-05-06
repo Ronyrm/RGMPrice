@@ -14,11 +14,17 @@ def capturaTodosUsuarios():
     return jsonify({'data':{},'mensagem':'Nenhum Usuário Cadastrado'})
 
 # Captura usuário pelo username
-def capturaUsuarioPorUserNameEmail(nome):
-    condicao = or_(Usuarios.username==nome,Pessoas.emailprincipal==nome)
+def capturaUsuarioPorUserName(nome):
+    condicao = or_(Usuarios.username==nome)
     usuario = Usuarios.query.filter(condicao).\
         join(Pessoas,Pessoas.id==Usuarios.idpessoa).first()
     return usuario
+
+
+def capturaUsuarioPorUserNameEmail(nome,email):
+    condicao = or_(Usuarios.username == nome,Pessoas.emailprincipal == email)
+    return Usuarios.query.filter(condicao)\
+        .join(Pessoas,Pessoas.id==Usuarios.idpessoa).first()
 
 # Gravar novo Usuário
 def GravaNovoUsuarioForm():
@@ -30,14 +36,16 @@ def GravaNovoUsuarioForm():
         usuario.senha = generate_password_hash(data['senha'])
 
         # validando username
-        if capturaUsuarioPorUserNameEmail(usuario.username):
-            return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o username/email: {usuario.username} no sistema',
+        if capturaUsuarioPorUserName(usuario.username):
+            return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o username: \
+                            <strong>{usuario.username}</strong> no sistema',
                             'sucesso': False})
         # validando email
-        #pessoa = pessoas.getPessoaPorEmail(data['email'])
-        #if pessoa:
-        #    return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o email: {data["email"]} no sistema',
-        #                    'sucesso': False})
+        pessoa = pessoas.getPessoaPorEmail(data['email'])
+        if pessoa:
+            return jsonify({'mensagem':f'Usuário ja encontra-ser cadastrado com o email:\
+                            <strong> {data["email"]} </strong> no sistema',
+                            'sucesso': False})
 
         # validando username
         pessoa = pessoas.getPessoaPorCNPJCPF(data['cnpjcpf'])
@@ -54,8 +62,8 @@ def GravaNovoUsuarioForm():
         try:
             db.session.add(usuario)
             db.session.commit()
-            return jsonify({'mensagem':f'Usuário {data["username"]} adicionado com sucesso',
-                        'sucesso':True})
+            return jsonify({'mensagem':f'Usuário {data["username"]} adicionado com sucesso. Faça o Login!',
+                        'sucesso':True,'email':data["email"]})
         except Exception as e:
             return jsonify({'mensagem': f' Houve um Erro:{str(e)} ao tentar gravar no banco de dados. Tente novamente!',
                             'sucesso': False})

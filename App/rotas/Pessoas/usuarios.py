@@ -7,6 +7,7 @@ rotausers = Blueprint('rotausers',__name__)
 @rotausers.route('/get/usuarios/all')
 def capturaTodosUsuarios():
     return usuarios.capturaTodosUsuarios()
+    
 @rotausers.route('/add/usuario',methods=['POST'])
 def gravaNovoUsuario():
     return usuarios.GravaNovoUsuarioForm()
