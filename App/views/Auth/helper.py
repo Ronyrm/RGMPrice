@@ -1,5 +1,5 @@
 from App import app
-from flask import request,jsonify,render_template,session
+from flask import request,jsonify,render_template,session,redirect,url_for
 from App.views.Pessoas import usuarios
 from App.models.usuarios import SchemaUsuarios
 from functools import wraps
@@ -29,24 +29,28 @@ def autentifica_form():
         token = jwt.encode({'username': usuario.username, 'id': usuario.id, 'exp': dtexp},
                            app.config['SECRET_KEY'],
                            algorithm='HS256')
-        try:
-            token_decode = token.decode('utf-8')
-        except ValueError as err:
-            return render_template('layouts/login.html',
-                                   login=False,
-                                   mensagem='Erro ao decodificar:' + str(err))
+        #try:
+        #    token_decode = token.encode().decode('utf-8')
+        #except ValueError as err:
+        #    return render_template('layouts/login.html',
+        #                           login=False,
+        #                           mensagem='Erro ao decodificar:' + str(err))
 
 
-        print(token_decode)
+        #print(token_decode)
         schema = SchemaUsuarios()
-        session['current_user'] = schema.dump(usuarios)
-        return render_template('layouts/index.html',
-                               login=True,
-                               mensagem='Usuário logado com sucesso',
-                               token=token_decode)
+        jsonuser = schema.dump(usuario)
+        session['current_user'] = jsonuser
+        return redirect(url_for('index.root',token=token,current_user=jsonuser))
+        #return render_template('layouts/index.html',
+        #                       login=True,
+        #                       mensagem='Usuário logado com sucesso',
+        #                       token=token_decode)
 
-    return jsonify({'mensagem': 'Não pode verificar!', 'login': False}), 401
-
+    #return jsonify({'mensagem': 'Não pode verificar!', 'login': False}), 401
+    return render_template('layouts/login.html',
+                                   login=False,
+                                   mensagem='Houve uma falha na validação e geração do Token. Faça novamente o Login!')
 
 def token_requerido(func):
     @wraps(func)
@@ -56,13 +60,19 @@ def token_requerido(func):
             #return jsonify({'login': False, 'mensagem': ' Token não informado','data': {}}), 401
             return render_template('layouts/login.html',login='',mensagem='')
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, app.config['SECRET_KEY'],algorithms="HS256")
             current_user = usuarios.capturaUsuarioPorUserName(data['username'])
 
             #return jsonify({'valide': True, 'mensage': ' Token Valido', 'data': data}), 201
 
-        except:
-            return jsonify({'login': False, 'mensagem': ' Token inválido ou expirado', 'data': {}}), 401
+        except Exception as e:
+            #return jsonify({'login': False, 'mensagem': ' Token inválido ou expirado', 
+            #                'data': {},
+            #                'erro': str(e)}), 401
+            return render_template('layouts/login.html',
+                                   login=False,
+                                   mensagem='Token inválido ou expirado. Faça novamente o Login!')
+
 
         return func(current_user,token,*args, **kwargs)
     return decorated

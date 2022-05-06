@@ -1,7 +1,7 @@
 db_localhost_postgres ={
     'HOST_POSTGRES' : 'localhost',
     'PORT_POSTGRES' : '5432',
-    'PWD_POSTGRES': 'rony0608',
+    'PWD_POSTGRES': 'rony1234',
     'USERNAME_POSTGRES': 'postgres',
     'DATABASE_POSTGRES': 'rgmsolutions'
 }

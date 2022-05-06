@@ -5,6 +5,7 @@ index = Blueprint('index',__name__)
 @index.route('/')
 @helper.token_requerido
 def root(current_user,token):
+    print(session['current_user'])
     if token:
         return render_template('/layouts/index.html',current_user = current_user, token=token)
     else:
