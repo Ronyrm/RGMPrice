@@ -1,11 +1,14 @@
-from App import app
+from App import app,db
 from flask import request,jsonify,render_template,session,redirect,url_for
+from flask_login import login_user,current_user
 from App.views.Pessoas import usuarios
-from App.models.usuarios import SchemaUsuarios
+from App.models.usuarios import SchemaUsuarios, Usuarios
 from functools import wraps
 import jwt
 
+
 def autentifica_form():
+    print(current_user)
     from werkzeug.security import check_password_hash
     import datetime
     import jwt
@@ -38,10 +41,18 @@ def autentifica_form():
 
 
         #print(token_decode)
-        schema = SchemaUsuarios()
-        jsonuser = schema.dump(usuario)
-        session['current_user'] = jsonuser
-        return redirect(url_for('index.root',token=token,current_user=jsonuser))
+        #schema = SchemaUsuarios()
+        #jsonuser = schema.dumps(usuario,many=True)
+        
+
+        
+
+        login_user(usuario)
+        session['current_user'] = current_user
+        usuario = Usuarios.query.get(usuario.id)
+        usuario.token = token
+        db.session.commit()
+        return redirect(url_for('index.root',token=token,current_user=current_user))
         #return render_template('layouts/index.html',
         #                       login=True,
         #                       mensagem='Usuário logado com sucesso',
