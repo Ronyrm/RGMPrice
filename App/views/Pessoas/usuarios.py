@@ -1,9 +1,17 @@
-from App import db
+from App import db,app
 from App.models.pessoas import Pessoas
 from App.models.usuarios import Usuarios,SchemaUsuarios
 from App.views.Pessoas import pessoas
 from flask import jsonify,request
 from sqlalchemy import or_
+from flask_login import LoginManager,logout_user,login_user
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(id):
+    return Usuarios.query.get(int(id))
 
 #captura todos os usuários
 def capturaTodosUsuarios():
