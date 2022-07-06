@@ -14,7 +14,7 @@ class Usuarios(db.Model):
     datacriacao = db.Column(db.DateTime, default=datetime.now())
     idpessoa = db.Column(db.Integer, db.ForeignKey('pessoas.id',back_populates="usuario"))
     pessoa = db.relationship("Pessoas")
-
+    
 class SchemaUsuarios(SQLAlchemyAutoSchema):
     class Meta:
         model: Usuarios
