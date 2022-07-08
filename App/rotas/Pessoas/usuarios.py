@@ -11,3 +11,7 @@ def capturaTodosUsuarios():
 @rotausers.route('/add/usuario',methods=['POST'])
 def gravaNovoUsuario():
     return usuarios.GravaNovoUsuarioForm()
+
+@rotausers.route('/login', methods=['POST'])
+def login():
+    return usuarios.login()

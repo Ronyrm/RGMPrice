@@ -6,12 +6,25 @@ from App.views.Pessoas import usuarios
 from App.models.usuarios import SchemaUsuarios, Usuarios
 from functools import wraps
 import jwt
+import datetime
 
+def getTokenUser(usuario):
+    try:
+        totalHoraExpira = int(app.config['HORA_EXPIRA_TOKEN'])
+    except:
+        totalHoraExpira = 12
+
+    dtexp = datetime.datetime.now() + datetime.timedelta(hours=totalHoraExpira)
+    try:
+        return jwt.encode({'username': usuario.username, 'id': usuario.id, 'exp': dtexp},
+                             app.config['SECRET_KEY'],
+                             algorithm='HS256')
+    except:
+        return None
+            
 
 def autentifica_form():
-    print(current_user)
     from werkzeug.security import check_password_hash
-    import datetime
     import jwt
 
     if request.method == 'POST':
@@ -29,30 +42,14 @@ def autentifica_form():
                                    login=False,
                                    mensagem='Senha não confere.')
 
-        dtexp = datetime.datetime.now() + datetime.timedelta(hours=12)
-        token = jwt.encode({'username': usuario.username, 'id': usuario.id, 'exp': dtexp},
-                           app.config['SECRET_KEY'],
-                           algorithm='HS256')
+        token = getTokenUser(usuario)
         #try:
         #    token_decode = token.encode().decode('utf-8')
         #except ValueError as err:
         #    return render_template('layouts/login.html',
         #                           login=False,
         #                           mensagem='Erro ao decodificar:' + str(err))
-
-
-        #print(token_decode)
-        #schema = SchemaUsuarios()
-        #jsonuser = schema.dumps(usuario,many=True)
-        
-
-        
-
-        
-        #session['current_user'] = current_user
         try:
-            db.session.close()
-            usuario = Usuarios.query.get(usuario.id)
             usuario.token = token
             db.session.commit()
             login_user(usuario)

@@ -1,10 +1,12 @@
 from App import db,app
+import App
 from App.models.pessoas import Pessoas
 from App.models.usuarios import Usuarios,SchemaUsuarios
 from App.views.Pessoas import pessoas
-from flask import jsonify,request
+from flask import jsonify,request,render_template,redirect,url_for
 from sqlalchemy import or_
-from flask_login import LoginManager,logout_user,login_user
+from flask_login import LoginManager, login_required,logout_user,login_user
+from App.views.Auth import helper
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -12,6 +14,41 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(id):
     return Usuarios.query.get(int(id))
+
+# login 
+def login():
+    if request.method == 'POST':
+        username, senha = request.form['username'],request.form['password']
+        usuario = capturaUsuarioPorUserNameEmail(username,username)
+        validaSenha = False
+         
+        if usuario:
+           validaSenha = usuario.getValidacaoSenha(senha)
+
+        token = None
+        if validaSenha :
+            token = helper.getTokenUser(usuario) 
+        else:
+            return render_template('layouts/login.html',
+                                   login=False,
+                                   mensagem='Senha não confere.')
+        if token:
+            usuario.token = token
+            db.session.commit()
+            login_user(usuario)
+        else:
+            return render_template('layouts/login.html',
+                                   login=False,
+                                   mensagem='Houve um erro na geração do Token.')
+
+        return redirect(url_for('index.root',token=token))
+
+# logout      
+@login_required      
+def logout():
+    logout_user()
+    redirect(url_for('index.root'))
+
 
 #captura todos os usuários
 def capturaTodosUsuarios():
@@ -30,6 +67,7 @@ def capturaUsuarioPorUserName(nome):
     return usuario
 
 
+# captura por username e email
 def capturaUsuarioPorUserNameEmail(nome,email):
     condicao = or_(Usuarios.username == nome,Pessoas.emailprincipal == email)
     return Usuarios.query.filter(condicao)\
