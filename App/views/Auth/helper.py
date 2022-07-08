@@ -1,3 +1,4 @@
+from ast import expr_context
 from App import app,db
 from flask import request,jsonify,render_template,session,redirect,url_for
 from flask_login import login_user,current_user
@@ -47,12 +48,28 @@ def autentifica_form():
 
         
 
-        login_user(usuario)
-        session['current_user'] = current_user
-        usuario = Usuarios.query.get(usuario.id)
-        usuario.token = token
-        db.session.commit()
-        return redirect(url_for('index.root',token=token,current_user=current_user))
+        
+        #session['current_user'] = current_user
+        try:
+            db.session.close()
+            usuario = Usuarios.query.get(usuario.id)
+            usuario.token = token
+            db.session.commit()
+            login_user(usuario)
+        except Exception as E:
+            return render_template('layouts/login.html',
+                                   login=False,
+                                   mensagem='Houve um erro na geração do Token. Error: {}'.format(str(E)))
+        #    print(str(E))
+        
+        #try:
+        #    schema = schema = SchemaUsuarios(many=True,exclude=('senha','token'))
+        #    userschema = schema.dump(usuario)
+        #    print(userschema)
+        #except Exception as E:
+        #    print(str(E))    
+
+        return redirect(url_for('index.root',token=token))
         #return render_template('layouts/index.html',
         #                       login=True,
         #                       mensagem='Usuário logado com sucesso',
@@ -66,13 +83,15 @@ def autentifica_form():
 def token_requerido(func):
     @wraps(func)
     def decorated(*args, **kwargs):
+
         token = request.args.get('token')
         if not token:
+            print(current_user)
             #return jsonify({'login': False, 'mensagem': ' Token não informado','data': {}}), 401
             return render_template('layouts/login.html',login='',mensagem='')
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'],algorithms="HS256")
-            current_user = usuarios.capturaUsuarioPorUserName(data['username'])
+            #current_user = usuarios.capturaUsuarioPorUserName(data['username'])
 
             #return jsonify({'valide': True, 'mensage': ' Token Valido', 'data': data}), 201
 
@@ -85,5 +104,5 @@ def token_requerido(func):
                                    mensagem='Token inválido ou expirado. Faça novamente o Login!')
 
 
-        return func(current_user,token,*args, **kwargs)
+        return func(token,*args, **kwargs)
     return decorated
