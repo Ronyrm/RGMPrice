@@ -1,5 +1,7 @@
-from App import db
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema 
+from dataclasses import field
+from App import db,ma
+from marshmallow import Schema,fields 
+
 
 class Pessoas(db.Model):
     __tablename__ = 'pessoas'
@@ -9,8 +11,8 @@ class Pessoas(db.Model):
     razaosocial    = db.Column(db.String(100), nullable=False)
     nomefantasia   = db.Column(db.String(100), nullable=False)
     emailprincipal = db.Column(db.String(50), nullable=False, unique=True)
-    usuario = db.relationship("Usuarios")
-
-class SchemaPessoas(SQLAlchemyAutoSchema):
+    
+class SchemaPessoas(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model: Pessoas
+        model = Pessoas
+    

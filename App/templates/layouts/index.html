@@ -1,11 +1,12 @@
 {% extends "layouts/base.html" %}
 
 {% block token %} {{ token }} {% endblock %}
-{% block current_user %} {{ current_user }} {% endblock %}
+
 
 {% block content %}
 <div class="container">
-  {{current_user.pessoa.razaosocial}} - {{current_user.pessoa.nomefantasia}}
+     {{token}}
+     {{current_user}}
 </div>
 
 {% endblock %}

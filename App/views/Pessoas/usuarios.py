@@ -17,8 +17,9 @@ def load_user(id):
 def capturaTodosUsuarios():
     usuarios = Usuarios.query.all()
     if usuarios:
-        schema = SchemaUsuarios()
-        return jsonify({'data':schema.dumps(usuarios,many=True)})
+        schema = SchemaUsuarios(many=True,exclude=('senha','token'))
+        schema = schema.dump(usuarios)
+        return jsonify({'data':schema})
     return jsonify({'data':{},'mensagem':'Nenhum Usuário Cadastrado'})
 
 # Captura usuário pelo username

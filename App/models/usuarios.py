@@ -1,7 +1,7 @@
-from App import db
+from App import db,ma
 from datetime import datetime
 from App.models.pessoas import SchemaPessoas
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow import Schema
 from flask_login import UserMixin
 
 from marshmallow import fields
@@ -17,7 +17,7 @@ class Usuarios(db.Model,UserMixin):
     idpessoa = db.Column(db.Integer, db.ForeignKey('pessoas.id'))
     pessoa = db.relationship("Pessoas")
     
-class SchemaUsuarios(SQLAlchemyAutoSchema):
+class SchemaUsuarios(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model: Usuarios
+        model = Usuarios
     pessoa = fields.Nested(SchemaPessoas)

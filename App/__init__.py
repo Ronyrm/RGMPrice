@@ -1,9 +1,10 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
+from flask_marshmallow import Marshmallow
 app = Flask(__name__)
 db = SQLAlchemy(app,session_options={"autoflush": False})
+ma = Marshmallow(app)
 migrate = Migrate(app,db)
 
 app.config.from_object('config')
