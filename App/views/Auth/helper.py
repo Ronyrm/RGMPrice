@@ -86,7 +86,9 @@ def token_requerido(func):
 
         token = request.args.get('token')
         if not token:
-            print(current_user)
+            token = current_user.token if current_user.is_authenticated else None
+                
+        if not token:
             #return jsonify({'login': False, 'mensagem': ' Token não informado','data': {}}), 401
             return render_template('layouts/login.html',login='',mensagem='')
         try:
